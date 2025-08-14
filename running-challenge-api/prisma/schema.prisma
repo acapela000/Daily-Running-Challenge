@@ -1,0 +1,51 @@
+model User {
+  id             Int      @id @default(autoincrement())
+  name           String
+  email          String   @unique
+  password_hash  String
+  created_at     DateTime @default(now())
+  results        Result[]
+  streak         Streak?
+}
+
+model Challenge {
+  id                Int      @id @default(autoincrement())
+  title             String
+  description       String
+  target_distance_km Float
+  start_date        DateTime
+  end_date          DateTime
+  created_by        Int
+  createdAt        DateTime @default(now())
+  results          Result[]
+}
+
+model Result {
+  id            Int      @id @default(autoincrement())
+  user_id       Int
+  challenge_id  Int
+  distance_km   Float
+  time_minutes   Float
+  calories      Float
+  date          DateTime
+  created_at    DateTime @default(now())
+  
+  user         User      @relation(fields: [user_id], references: [id])
+  challenge    Challenge @relation(fields: [challenge_id], references: [id])
+}
+
+model Streak {
+  user_id      Int      @id
+  streak_count Int      @default(0)
+  
+  user         User     @relation(fields: [user_id], references: [id])
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
