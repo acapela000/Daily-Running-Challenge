@@ -1,17 +1,4 @@
-import { Model, DataTypes } from 'sequelize';
-import { sequelize } from '../db';
-
-class User extends Model {
-  public id!: number;
-  public name!: string;
-  public email!: string;
-  public password_hash!: string;
-  public created_at!: Date;
-
-  // timestamps!
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
-}
+class User extends Model {}
 
 User.init(
   {
@@ -29,20 +16,14 @@ User.init(
       allowNull: false,
       unique: true,
     },
-    password_hash: {
+    password: {
       type: DataTypes.STRING,
       allowNull: false,
-    },
-    created_at: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.NOW,
     },
   },
   {
     sequelize,
-    tableName: 'users',
-    underscored: true,
+    modelName: "User",
   }
 );
 
