@@ -4,7 +4,7 @@ import { db } from "../db/index";
 export class ChallengeService {
   async createChallenge(challengeData: Partial<Challenge>): Promise<Challenge> {
     const challenge = await db.challenge.create({
-      data: challengeData,
+      data: challengeData as any,
     });
     return challenge;
   }
@@ -15,20 +15,19 @@ export class ChallengeService {
   }
 
   async updateChallenge(
-    id: number,
+    id: string,
     challengeData: Partial<Challenge>
   ): Promise<Challenge> {
     const updatedChallenge = await db.challenge.update({
-      where: { id },
-      data: challengeData,
+      where: { id: parseInt(id) },
+      data: challengeData as any,
     });
     return updatedChallenge;
   }
 
-  async deleteChallenge(id: number): Promise<Challenge> {
-    const deletedChallenge = await db.challenge.delete({
-      where: { id },
+  async deleteChallenge(id: string): Promise<void> {
+    await db.challenge.delete({
+      where: { id: parseInt(id) },
     });
-    return deletedChallenge;
   }
 }
