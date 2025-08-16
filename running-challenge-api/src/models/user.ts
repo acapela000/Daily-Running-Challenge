@@ -1,30 +1,16 @@
-class User extends Model {}
+export interface User {
+  id: number;
+  name: string;
+  email: string;
+  password_hash: string;
+  created_at: Date;
+}
 
-User.init(
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-  },
-  {
-    sequelize,
-    modelName: "User",
-  }
-);
+// Remove the Sequelize Model class - not needed with Prisma
+// Database operations will be handled by Prisma Client through your db/index.ts
+
+// User model without Sequelize - using plain TypeScript interface only
+// For PostgreSQL integration, you'll need to implement database operations separately
+// This is just the data structure definition
 
 export default User;
