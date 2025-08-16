@@ -1,3 +1,12 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
 model User {
   id             Int      @id @default(autoincrement())
   name           String
@@ -9,15 +18,15 @@ model User {
 }
 
 model Challenge {
-  id                Int      @id @default(autoincrement())
-  title             String
-  description       String
+  id                 Int      @id @default(autoincrement())
+  title              String
+  description        String
   target_distance_km Float
-  start_date        DateTime
-  end_date          DateTime
-  created_by        Int
-  createdAt        DateTime @default(now())
-  results          Result[]
+  start_date         DateTime
+  end_date           DateTime
+  created_by         Int
+  created_at         DateTime @default(now())
+  results            Result[]
 }
 
 model Result {
@@ -25,13 +34,12 @@ model Result {
   user_id       Int
   challenge_id  Int
   distance_km   Float
-  time_minutes   Float
-  calories      Float
+  time_minutes  Float
   date          DateTime
   created_at    DateTime @default(now())
   
-  user         User      @relation(fields: [user_id], references: [id])
-  challenge    Challenge @relation(fields: [challenge_id], references: [id])
+  user          User      @relation(fields: [user_id], references: [id])
+  challenge     Challenge @relation(fields: [challenge_id], references: [id])
 }
 
 model Streak {
@@ -39,13 +47,4 @@ model Streak {
   streak_count Int      @default(0)
   
   user         User     @relation(fields: [user_id], references: [id])
-}
-
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-
-generator client {
-  provider = "prisma-client-js"
 }
