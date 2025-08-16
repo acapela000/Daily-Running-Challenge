@@ -1,34 +1,40 @@
+import { Request, Response } from "express";
+import { ResultService } from "../services/resultService";
+
 export class ResultController {
-    async submitResult(req, res) {
-        const { userId, challengeId, distanceKm, timeMinutes, date } = req.body;
+  private resultService: ResultService;
 
-        // Validate input
-        if (!userId || !challengeId || !distanceKm || !timeMinutes || !date) {
-            return res.status(400).json({ message: 'All fields are required' });
-        }
+  constructor() {
+    this.resultService = new ResultService();
+  }
 
-        try {
-            // Calculate calories burned (assuming a function exists in resultService)
-            const calories = this.calculateCalories(distanceKm, req.user.weight);
+  async submitResult(req: Request, res: Response) {
+    const { userId, challengeId, distanceKm, timeMinutes, date } = req.body;
 
-            // Save result to the database (assuming a function exists in resultService)
-            const result = await resultService.saveResult({
-                userId,
-                challengeId,
-                distanceKm,
-                timeMinutes,
-                calories,
-                date,
-            });
-
-            return res.status(201).json(result);
-        } catch (error) {
-            return res.status(500).json({ message: 'Error submitting result', error });
-        }
+    if (!userId || !challengeId || !distanceKm || !timeMinutes || !date) {
+      return res.status(400).json({ message: "All fields are required" });
     }
 
-    calculateCalories(distanceKm, weight) {
-        // Example calculation: 1 km burns approximately 1 kcal per kg of body weight
-        return distanceKm * weight;
+    try {
+      const calories = this.calculateCalories(distanceKm, 70); // Default weight
+
+      const result = await this.resultService.submitResult(
+        userId,
+        challengeId,
+        distanceKm,
+        timeMinutes,
+        new Date(date)
+      );
+
+      return res.status(201).json(result);
+    } catch (error: any) {
+      return res
+        .status(500)
+        .json({ message: "Error submitting result", error: error.message });
     }
+  }
+
+  private calculateCalories(distanceKm: number, weight: number = 70): number {
+    return distanceKm * weight;
+  }
 }
