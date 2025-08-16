@@ -28,3 +28,5 @@ app.listen(PORT, () => {
 });
 
 export default app;
+// or
+module.exports = app;
